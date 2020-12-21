@@ -1,8 +1,8 @@
 package DesignPatterns.model
 
-import org.scalatest.{FunSuite, Matchers}
+import DesignPatterns.BasicTest
 
-class CarTest extends FunSuite with Matchers {
+class CarTest extends BasicTest {
   val car = new Sedan(EngineType.Diesel, QualityType.Medium, maxSpeed = 200, doorsNumber = 4)
 
   test("carType test") {

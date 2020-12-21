@@ -1,9 +1,9 @@
 package DesignPatterns.prototype
 
+import DesignPatterns.BasicTest
 import DesignPatterns.factory.{KabrioletFactory, KombiFactory, MinivanFactory, SedanFactory}
-import org.scalatest.{FunSuite, Matchers}
 
-class PrototypeTest extends FunSuite with Matchers {
+class PrototypeTest extends BasicTest {
 
   test("clone kabriolet") {
     val kabriolet = KabrioletFactory.create()

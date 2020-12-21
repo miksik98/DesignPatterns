@@ -2,9 +2,13 @@ package DesignPatterns.model
 
 import DesignPatterns.model.EngineType.EngineType
 import DesignPatterns.model.QualityType.QualityType
+import DesignPatterns.singleton.CarProducer
 
 class Minivan (engineType: EngineType, qualityType: QualityType, maxSpeed: Int, val weight: Int)
   extends Car(engineType, qualityType, maxSpeed, 8) {
+
+  CarProducer.getInstance().addCar(this)
+
   override def toString: String = {
     super.toString + ", " + weight + " weight"
   }

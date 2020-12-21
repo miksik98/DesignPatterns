@@ -1,9 +1,9 @@
 package DesignPatterns.factory
 
+import DesignPatterns.BasicTest
 import DesignPatterns.model.{Kabriolet, Kombi, Minivan, Sedan}
-import org.scalatest.{FunSuite, Matchers}
 
-class FactoryTest extends FunSuite with Matchers {
+class FactoryTest extends BasicTest {
   test("should create kabriolet") {
     KabrioletFactory.create().isInstanceOf[Kabriolet] shouldBe true
   }

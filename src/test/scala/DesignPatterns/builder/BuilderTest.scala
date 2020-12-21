@@ -1,9 +1,9 @@
 package DesignPatterns.builder
 
+import DesignPatterns.BasicTest
 import DesignPatterns.model.{EngineType, Kabriolet, Kombi, Minivan, QualityType, Sedan}
-import org.scalatest.{FunSuite, Matchers, Assertions}
 
-class BuilderTest extends FunSuite with Matchers {
+class BuilderTest extends BasicTest {
 
   private val engineType = EngineType.LPG
   private val maxSpeed = 200
