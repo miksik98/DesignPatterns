@@ -1,6 +1,5 @@
 package DesignPatterns.model
 
-import DesignPatterns.model.CarType.CarType
 import DesignPatterns.model.EngineType.EngineType
 import DesignPatterns.model.QualityType.QualityType
 
