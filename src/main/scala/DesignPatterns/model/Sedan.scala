@@ -7,4 +7,17 @@ class Sedan(engineType: EngineType, qualityType: QualityType, maxSpeed: Int, val
   override def toString: String = {
     super.toString + ", " + doorsNumber + " doors"
   }
+
+  override def cloneCar(): Car = {
+    new Sedan(engineType, qualityType, maxSpeed, doorsNumber)
+  }
+
+  override def equals(obj: Any): Boolean = {
+    obj match {
+      case other: Sedan =>
+        super.equals(other) && this.doorsNumber == other.doorsNumber
+      case _ =>
+        false
+    }
+  }
 }

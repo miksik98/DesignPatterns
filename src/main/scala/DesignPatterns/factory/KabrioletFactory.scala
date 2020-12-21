@@ -2,7 +2,7 @@ package DesignPatterns.factory
 import DesignPatterns.model.{Car, Kabriolet}
 import Generators._
 
-class KabrioletFactory extends CarFactory {
+object KabrioletFactory extends CarFactory {
   override def create(): Car = {
     new Kabriolet(
       EngineGenerator.generate(),

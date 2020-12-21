@@ -8,4 +8,17 @@ class Kombi(engineType: EngineType, qualityType: QualityType, maxSpeed: Int, val
   override def toString: String = {
     super.toString + ", " + bootCapacity + "l boot capacity"
   }
+
+  override def cloneCar(): Car = {
+    new Kombi(engineType, qualityType, maxSpeed, bootCapacity)
+  }
+
+  override def equals(obj: Any): Boolean = {
+    obj match {
+      case other: Kombi =>
+        super.equals(other) && this.bootCapacity == other.bootCapacity
+      case _ =>
+        false
+    }
+  }
 }

@@ -12,4 +12,17 @@ class Kabriolet (engineType: EngineType, qualityType: QualityType, maxSpeed: Int
       super.toString + ", with roof"
     }
   }
+
+  override def cloneCar(): Car = {
+    new Kabriolet(engineType, qualityType, maxSpeed, hasRoof)
+  }
+
+  override def equals(obj: Any): Boolean = {
+    obj match {
+      case other: Kabriolet =>
+        super.equals(other) && this.hasRoof == other.hasRoof
+      case _ =>
+        false
+    }
+  }
 }
