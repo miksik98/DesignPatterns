@@ -1,5 +1,5 @@
 package DesignPatterns.factory
-import DesignPatterns.model.{Car, Kabriolet}
+import DesignPatterns.model.cars.{Car, Kabriolet}
 import Generators._
 
 object KabrioletFactory extends CarFactory {

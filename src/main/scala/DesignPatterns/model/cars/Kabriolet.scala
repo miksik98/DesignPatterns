@@ -1,7 +1,7 @@
-package DesignPatterns.model
+package DesignPatterns.model.cars
 
-import DesignPatterns.model.EngineType.EngineType
-import DesignPatterns.model.QualityType.QualityType
+import DesignPatterns.model.cars.EngineType.EngineType
+import DesignPatterns.model.cars.QualityType.QualityType
 import DesignPatterns.singleton.CarProducer
 
 class Kabriolet (engineType: EngineType, qualityType: QualityType, maxSpeed: Int, val hasRoof: Boolean)

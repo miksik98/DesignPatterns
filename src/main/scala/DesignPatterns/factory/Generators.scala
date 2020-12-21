@@ -1,8 +1,8 @@
 package DesignPatterns.factory
 
-import DesignPatterns.model.EngineType.EngineType
-import DesignPatterns.model.{EngineType, QualityType}
-import DesignPatterns.model.QualityType.QualityType
+import DesignPatterns.model.cars.EngineType.EngineType
+import DesignPatterns.model.cars.{EngineType, QualityType}
+import DesignPatterns.model.cars.QualityType.QualityType
 
 import scala.util.Random
 

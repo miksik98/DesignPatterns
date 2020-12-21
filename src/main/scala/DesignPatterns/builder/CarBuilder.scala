@@ -1,8 +1,8 @@
 package DesignPatterns.builder
 
-import DesignPatterns.model.Car
-import DesignPatterns.model.EngineType.EngineType
-import DesignPatterns.model.QualityType.QualityType
+import DesignPatterns.model.cars.Car
+import DesignPatterns.model.cars.EngineType.EngineType
+import DesignPatterns.model.cars.QualityType.QualityType
 
 trait CarBuilder {
   protected var engineType: Option[EngineType] = None

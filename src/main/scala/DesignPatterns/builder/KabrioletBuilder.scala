@@ -1,5 +1,5 @@
 package DesignPatterns.builder
-import DesignPatterns.model.{Car, Kabriolet}
+import DesignPatterns.model.cars.{Car, Kabriolet}
 
 class KabrioletBuilder extends CarBuilder {
   private var hasRoof: Option[Boolean] = None

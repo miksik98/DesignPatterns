@@ -1,18 +1,18 @@
 package DesignPatterns.builder
-import DesignPatterns.model.{Car, Kombi}
+import DesignPatterns.model.cars.{Car, Kombi}
 
 class KombiBuilder extends CarBuilder {
-  private var bootCapacity: Option[Int] = None
+  private var trunkCapacity: Option[Int] = None
 
-  def setBootCapacity(bootCapacity: Int): Unit = {
-    this.bootCapacity = Some(bootCapacity)
+  def setTrunkCapacity(trunkCapacity: Int): Unit = {
+    this.trunkCapacity = Some(trunkCapacity)
   }
 
   override def getResult: Car = {
-    if (!allBasicFieldsDefined || bootCapacity.isEmpty){
+    if (!allBasicFieldsDefined || trunkCapacity.isEmpty){
       throw new NotAllFieldsDefinedException
     } else {
-      new Kombi(engineType.get, qualityType.get, maxSpeed.get, bootCapacity.get)
+      new Kombi(engineType.get, qualityType.get, maxSpeed.get, trunkCapacity.get)
     }
   }
 }

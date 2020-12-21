@@ -1,7 +1,7 @@
 package DesignPatterns.builder
 
 import DesignPatterns.BasicTest
-import DesignPatterns.model.{EngineType, Kabriolet, Kombi, Minivan, QualityType, Sedan}
+import DesignPatterns.model.cars.{EngineType, Kabriolet, Kombi, Minivan, QualityType, Sedan}
 
 class BuilderTest extends BasicTest {
 
@@ -29,13 +29,13 @@ class BuilderTest extends BasicTest {
     builder.setEngineType(engineType)
     builder.setMaxSpeed(maxSpeed)
     builder.setQualityType(qualityType)
-    builder.setBootCapacity(bootCapacity)
+    builder.setTrunkCapacity(bootCapacity)
     val car = builder.getResult
     car.isInstanceOf[Kombi] shouldBe true
     car.maxSpeed shouldBe maxSpeed
     car.qualityType shouldBe qualityType
     car.engineType shouldBe engineType
-    car.asInstanceOf[Kombi].bootCapacity shouldBe bootCapacity
+    car.asInstanceOf[Kombi].trunkCapacity shouldBe bootCapacity
   }
 
   test("minivan builder test") {

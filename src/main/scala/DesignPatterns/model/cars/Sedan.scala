@@ -1,6 +1,7 @@
-package DesignPatterns.model
-import DesignPatterns.model.EngineType.EngineType
-import DesignPatterns.model.QualityType.QualityType
+package DesignPatterns.model.cars
+
+import DesignPatterns.model.cars.EngineType.EngineType
+import DesignPatterns.model.cars.QualityType.QualityType
 import DesignPatterns.singleton.CarProducer
 
 class Sedan(engineType: EngineType, qualityType: QualityType, maxSpeed: Int, val doorsNumber: Int)

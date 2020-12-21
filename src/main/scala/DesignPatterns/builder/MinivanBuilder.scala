@@ -1,5 +1,5 @@
 package DesignPatterns.builder
-import DesignPatterns.model.{Car, Minivan}
+import DesignPatterns.model.cars.{Car, Minivan}
 
 class MinivanBuilder extends CarBuilder {
   private var weight: Option[Int] = None

@@ -1,5 +1,5 @@
 package DesignPatterns.builder
-import DesignPatterns.model.{Car, Sedan}
+import DesignPatterns.model.cars.{Car, Sedan}
 
 class SedanBuilder extends CarBuilder {
   private var doorsNumber: Option[Int] = None

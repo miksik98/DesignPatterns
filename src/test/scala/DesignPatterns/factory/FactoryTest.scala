@@ -1,7 +1,7 @@
 package DesignPatterns.factory
 
 import DesignPatterns.BasicTest
-import DesignPatterns.model.{Kabriolet, Kombi, Minivan, Sedan}
+import DesignPatterns.model.cars.{Kabriolet, Kombi, Minivan, Sedan}
 
 class FactoryTest extends BasicTest {
   test("should create kabriolet") {

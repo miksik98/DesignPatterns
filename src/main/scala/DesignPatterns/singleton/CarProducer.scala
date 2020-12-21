@@ -1,6 +1,6 @@
 package DesignPatterns.singleton
 
-import DesignPatterns.model.Car
+import DesignPatterns.model.cars.Car
 
 protected class CarProducer {
   def printCars(): Unit = {
