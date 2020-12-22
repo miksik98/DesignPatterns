@@ -1,5 +1,6 @@
 package DesignPatterns.model.cars
 
+import DesignPatterns.decorator.Tuningable
 import DesignPatterns.model.cars.EngineType.EngineType
 import DesignPatterns.model.cars.QualityType.QualityType
 import DesignPatterns.prototype.CarPrototype
@@ -20,7 +21,7 @@ object QualityType extends Enumeration {
 }
 
 abstract class Car(var engineType: EngineType, val qualityType: QualityType, var  maxSpeed: Int, val maxSeatsNumber: Int)
-  extends CarPrototype {
+  extends CarPrototype with Tuningable {
 
   val carType: String = this.getClass.getSimpleName
   var actualSeatsNumber: Int = maxSeatsNumber
@@ -51,9 +52,9 @@ abstract class Car(var engineType: EngineType, val qualityType: QualityType, var
     (maxSeatsNumber - actualSeatsNumber) * 100
   }
 
-  def engineTuning(): Unit = {
-    maxSpeed = maxSpeed + 10
-  }
+  override def getTuningSpeed: Int = 10
+
+  def getMaxSpeed: Int = maxSpeed
 
   override def toString: String = {
     carType + " - " + engineType + ", " + qualityType + " quality, " + maxSpeed + " max speed, " + maxSeatsNumber + " seats"
