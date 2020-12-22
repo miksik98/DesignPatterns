@@ -21,6 +21,10 @@ class IteratorTest extends BasicTest {
         case _ =>
       }
     }
-    cars shouldBe CarProducer.getInstance().getCars
+    val carProducerCars = CarProducer.getInstance().getCars
+    for (car <- cars) {
+      carProducerCars.contains(car) shouldBe true
+    }
+    cars.length shouldBe carProducerCars.length
   }
 }
