@@ -1,21 +1,33 @@
 package DesignPatterns.singleton
 
+import DesignPatterns.composite.{FinalProduct, ProductionFlowComponent, SubContractor, SubContractorGenerator}
 import DesignPatterns.model.cars.Car
 
-protected class CarProducer {
+protected class CarProducer(var components: Seq[ProductionFlowComponent])
+  extends SubContractor(components, isMainContractor = true) {
+  def this() = {
+    this(Seq.empty)
+  }
+
+  override def getComponents: Seq[ProductionFlowComponent] = components
+
   def printCars(): Unit = {
-    cars.foreach(println(_))
+    getCars.foreach(println(_))
   }
 
-  private var cars: Seq[Car] = Seq.empty
-
-  def addCar(car: Car): Unit = cars = this.synchronized {
-    cars :+ car
+  def addComponent(component: ProductionFlowComponent): Unit = this.synchronized {
+    components = components :+ component
   }
 
-  def reset(): Unit = cars = Seq.empty
+  def addCar(car: Car): Unit = this.synchronized {
+    components = components :+ FinalProduct(car)
+  }
 
-  def carsNumber: Int = cars.length
+  def reset(): Unit = this.synchronized {
+    components = Seq.empty
+  }
+
+  def carsNumber: Int = getCars.length
 }
 
 object CarProducer {

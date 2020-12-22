@@ -1,7 +1,7 @@
 package DesignPatterns.factory
 
 import DesignPatterns.model.cars.EngineType.EngineType
-import DesignPatterns.model.cars.{EngineType, QualityType}
+import DesignPatterns.model.cars.{Car, EngineType, QualityType}
 import DesignPatterns.model.cars.QualityType.QualityType
 
 import scala.util.Random
@@ -50,7 +50,7 @@ object Generators {
 
   object WeightGenerator extends Generator[Int] {
     override def generate(): Int = {
-      (rand.nextInt() % 4 + 1) * 1000
+      (rand.nextInt(4) + 1) * 1000
     }
   }
 
@@ -67,6 +67,20 @@ object Generators {
   object BootCapacityGenerator extends Generator[Int] {
     override def generate(): Int = {
       rand.nextInt(300) + 300
+    }
+  }
+
+  object CarGenerator extends Generator[Car] {
+    private val factories: Seq[CarFactory] =
+      Seq(
+        KabrioletFactory,
+        KombiFactory,
+        MinivanFactory,
+        SedanFactory
+      )
+
+    override def generate(): Car = {
+      factories(rand.nextInt(factories.length)).create()
     }
   }
 }
