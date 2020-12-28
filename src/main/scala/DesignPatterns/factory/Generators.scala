@@ -83,4 +83,10 @@ object Generators {
       factories(rand.nextInt(factories.length)).create()
     }
   }
+
+  object SerialNumberGenerator extends Generator[Int] {
+    override def generate(): Int = {
+      rand.nextInt(10)*1000 + rand.nextInt(10)*100 + rand.nextInt(10)*10 + rand.nextInt(10)
+    }
+  }
 }

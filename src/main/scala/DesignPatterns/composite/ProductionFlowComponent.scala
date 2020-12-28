@@ -11,7 +11,7 @@ trait ProductionFlowComponent {
 }
 
 class SubContractor(components: Seq[ProductionFlowComponent],
-                    name: String = new Random().nextString(5),
+                    val name: String = new Random().nextString(5),
                     isMainContractor: Boolean = false)
   extends ProductionFlowComponent with IterableCollection[ProductionFlowComponent] {
 
@@ -61,17 +61,37 @@ class SubContractor(components: Seq[ProductionFlowComponent],
             tuple = stack.pop()
           }
           indentations = tuple._2 + 1
-          stack.push((tuple._1 - 1, indentations))
+          stack.push((tuple._1 - 1, tuple._2))
         case _ =>
       }
     }
   }
+
+  override def equals(obj: Any): Boolean = {
+    obj match {
+      case other: SubContractor =>
+        this.name == other.name
+      case _ => false
+    }
+  }
 }
 
-class FinalProduct(car: Car) extends ProductionFlowComponent {
+class FinalProduct(val car: Car) extends ProductionFlowComponent {
   override def getCars: Seq[Car] = Seq(car)
 
   override def toString: String = car.toString
+
+  def hasSerialNumber(serialNumber: Int): Boolean = {
+    car.serialNumber == serialNumber
+  }
+
+  override def equals(obj: Any): Boolean = {
+    obj match {
+      case other: FinalProduct =>
+        this.car == other.car
+      case _ => false
+    }
+  }
 }
 
 object FinalProduct {

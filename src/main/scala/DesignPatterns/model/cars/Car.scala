@@ -1,6 +1,7 @@
 package DesignPatterns.model.cars
 
 import DesignPatterns.decorator.Tuningable
+import DesignPatterns.factory.Generators.SerialNumberGenerator
 import DesignPatterns.model.cars.EngineType.EngineType
 import DesignPatterns.model.cars.QualityType.QualityType
 import DesignPatterns.prototype.CarPrototype
@@ -25,6 +26,7 @@ abstract class Car(var engineType: EngineType, val qualityType: QualityType, var
 
   val carType: String = this.getClass.getSimpleName
   var actualSeatsNumber: Int = maxSeatsNumber
+  val serialNumber: Int = SerialNumberGenerator.generate()
 
   def changeEngine(): Unit = {
     engineType = EngineType.values.filter(!_.equals(engineType)).head
@@ -57,7 +59,7 @@ abstract class Car(var engineType: EngineType, val qualityType: QualityType, var
   def getMaxSpeed: Int = maxSpeed
 
   override def toString: String = {
-    carType + " - " + engineType + ", " + qualityType + " quality, " + maxSpeed + " max speed, " + maxSeatsNumber + " seats"
+    serialNumber + ": " + carType + " - " + engineType + ", " + qualityType + " quality, " + maxSpeed + " max speed, " + maxSeatsNumber + " seats"
   }
 
   override def equals(obj: Any): Boolean = {

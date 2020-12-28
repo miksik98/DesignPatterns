@@ -5,8 +5,31 @@ import DesignPatterns.model.cars.Car
 
 protected class CarProducer(var components: Seq[ProductionFlowComponent])
   extends SubContractor(components, isMainContractor = true) {
+
   def this() = {
     this(Seq.empty)
+  }
+
+  def deleteCar(serialNumber: Int): Unit = {
+    def branchContainsCar(component: ProductionFlowComponent): Boolean = {
+      component match {
+        case fp: FinalProduct => fp.hasSerialNumber(serialNumber)
+        case sc: SubContractor =>
+          for (c <- sc.getComponents) {
+            if (branchContainsCar(c)) {
+              return true
+            }
+          }
+          false
+      }
+    }
+
+    components.find(branchContainsCar) match {
+      case Some(component) =>
+        components = components.filterNot(c => c == component)
+      case _ =>
+        throw new CarNotFoundException(serialNumber)
+    }
   }
 
   override def getComponents: Seq[ProductionFlowComponent] = components
@@ -29,6 +52,8 @@ protected class CarProducer(var components: Seq[ProductionFlowComponent])
 
   def carsNumber: Int = getCars.length
 }
+
+class CarNotFoundException(serialNumber: Int) extends RuntimeException
 
 object CarProducer {
   private var instance: Option[CarProducer] = None
