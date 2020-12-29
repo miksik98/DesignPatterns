@@ -21,12 +21,14 @@ object QualityType extends Enumeration {
   val Low, Medium, High = Value
 }
 
-abstract class Car(var engineType: EngineType, val qualityType: QualityType, var  maxSpeed: Int, val maxSeatsNumber: Int)
+abstract class Car(var engineType: EngineType, val qualityType: QualityType,
+                   var  maxSpeed: Int, val maxSeatsNumber: Int, var serialNumber: Int = SerialNumberGenerator.generate())
   extends CarPrototype with Tuningable {
 
   val carType: String = this.getClass.getSimpleName
   var actualSeatsNumber: Int = maxSeatsNumber
-  val serialNumber: Int = SerialNumberGenerator.generate()
+
+  def setSerialNumber(serialNumber: Int): Unit = this.serialNumber = serialNumber
 
   def changeEngine(): Unit = {
     engineType = EngineType.values.filter(!_.equals(engineType)).head

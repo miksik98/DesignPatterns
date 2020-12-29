@@ -20,9 +20,9 @@ class SingletonTest extends BasicTest {
 
   test("deleting simple test") {
     val kabriolet = KabrioletFactory.create()
-    val prevCars = CarProducer.getInstance().getCars
+    val prevCarsNumber = CarProducer.getInstance().carsNumber
     CarProducer.getInstance().deleteCar(kabriolet.serialNumber)
-    prevCars.length shouldBe CarProducer.getInstance().getCars.length + 1
+    prevCarsNumber shouldBe CarProducer.getInstance().carsNumber + 1
   }
 
   test("deleting big tree test") {
@@ -30,8 +30,8 @@ class SingletonTest extends BasicTest {
     CarProducer.getInstance().addComponent(SubContractorGenerator.generate())
     CarProducer.getInstance().addComponent(SubContractorGenerator.generate())
     val car = CarProducer.getInstance().components.last.getCars.last
-    val prevCars = CarProducer.getInstance().getCars
+    val prevCarsNumber = CarProducer.getInstance().carsNumber
     CarProducer.getInstance().deleteCar(car.serialNumber)
-    prevCars.length shouldBe CarProducer.getInstance().getCars.length + 1
+    prevCarsNumber shouldBe CarProducer.getInstance().carsNumber + 1
   }
 }

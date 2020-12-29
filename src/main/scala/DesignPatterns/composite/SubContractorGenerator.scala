@@ -14,8 +14,11 @@ object SubContractorGenerator extends Generator[SubContractor] {
 
     val subContractors = Seq.fill(levels)(generate())
     if (subContractors.isEmpty || iterations > 100) {
-      builder.withComponents(Seq(FinalProduct(CarGenerator.generate())))
-      builder.getResult
+      val fp = FinalProduct(CarGenerator.generate())
+      builder.withComponents(Seq(fp))
+      val result = builder.getResult
+      fp.setSubContractor(result)
+      result
     } else {
       builder.withComponents(subContractors)
       builder.getResult

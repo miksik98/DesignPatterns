@@ -10,7 +10,7 @@ trait ProductionFlowComponent {
   def getCars: Seq[Car]
 }
 
-class SubContractor(components: Seq[ProductionFlowComponent],
+class SubContractor(var components: Seq[ProductionFlowComponent],
                     val name: String = new Random().nextString(5),
                     isMainContractor: Boolean = false)
   extends ProductionFlowComponent with IterableCollection[ProductionFlowComponent] {
@@ -20,6 +20,22 @@ class SubContractor(components: Seq[ProductionFlowComponent],
   }
 
   def getComponents: Seq[ProductionFlowComponent] = components
+
+  def removeComponent(component: ProductionFlowComponent): Unit = this.synchronized {
+    components = components.filterNot(c => c == component)
+  }
+
+  def addComponent(component: ProductionFlowComponent): Unit = this.synchronized {
+    components = components :+ component
+  }
+
+  def addCar(car: Car): Unit = this.synchronized {
+    components = components :+ FinalProduct(car, this)
+  }
+
+  def reset(): Unit = this.synchronized {
+    components = Seq.empty
+  }
 
   def getCars: Seq[Car] = {
     getComponents.map(sc => sc.getCars) match {
@@ -76,13 +92,24 @@ class SubContractor(components: Seq[ProductionFlowComponent],
   }
 }
 
-class FinalProduct(val car: Car) extends ProductionFlowComponent {
+class FinalProduct(val car: Car, var subContractor: Option[SubContractor]) extends ProductionFlowComponent {
   override def getCars: Seq[Car] = Seq(car)
 
   override def toString: String = car.toString
 
   def hasSerialNumber(serialNumber: Int): Boolean = {
     car.serialNumber == serialNumber
+  }
+
+  def removeFromSubContractor(): Unit = {
+    subContractor match {
+      case Some(c) => c.removeComponent(this)
+      case None => sys.error("parent not set for final product " + this)
+    }
+  }
+
+  def setSubContractor(subContractor: SubContractor): Unit = {
+    this.subContractor = Some(subContractor)
   }
 
   override def equals(obj: Any): Boolean = {
@@ -95,5 +122,6 @@ class FinalProduct(val car: Car) extends ProductionFlowComponent {
 }
 
 object FinalProduct {
-  def apply(car: Car): FinalProduct = new FinalProduct(car)
+  def apply(car: Car, subContractor: SubContractor): FinalProduct = new FinalProduct(car, Some(subContractor))
+  def apply(car: Car): FinalProduct = new FinalProduct(car, None)
 }

@@ -1,53 +1,25 @@
 package DesignPatterns.singleton
 
-import DesignPatterns.composite.{FinalProduct, ProductionFlowComponent, SubContractor, SubContractorGenerator}
-import DesignPatterns.model.cars.Car
+import DesignPatterns.composite.{FinalProduct, SubContractor}
 
-protected class CarProducer(var components: Seq[ProductionFlowComponent])
-  extends SubContractor(components, isMainContractor = true) {
-
-  def this() = {
-    this(Seq.empty)
-  }
+protected class CarProducer
+  extends SubContractor(Seq.empty, isMainContractor = true) {
 
   def deleteCar(serialNumber: Int): Unit = {
-    def branchContainsCar(component: ProductionFlowComponent): Boolean = {
-      component match {
-        case fp: FinalProduct => fp.hasSerialNumber(serialNumber)
-        case sc: SubContractor =>
-          for (c <- sc.getComponents) {
-            if (branchContainsCar(c)) {
-              return true
-            }
-          }
-          false
+    val it = createIterator()
+    while (it.hasNext) {
+      it.next match {
+        case fp: FinalProduct if fp.hasSerialNumber(serialNumber) =>
+          fp.removeFromSubContractor()
+          return
+        case _ =>
       }
     }
-
-    components.find(branchContainsCar) match {
-      case Some(component) =>
-        components = components.filterNot(c => c == component)
-      case _ =>
-        throw new CarNotFoundException(serialNumber)
-    }
+    throw new CarNotFoundException(serialNumber)
   }
-
-  override def getComponents: Seq[ProductionFlowComponent] = components
 
   def printCars(): Unit = {
     getCars.foreach(println(_))
-  }
-
-  def addComponent(component: ProductionFlowComponent): Unit = this.synchronized {
-    components = components :+ component
-  }
-
-  def addCar(car: Car): Unit = this.synchronized {
-    components = components :+ FinalProduct(car)
-  }
-
-  def reset(): Unit = this.synchronized {
-    components = Seq.empty
   }
 
   def carsNumber: Int = getCars.length

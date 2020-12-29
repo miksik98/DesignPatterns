@@ -1,5 +1,8 @@
 package DesignPatterns
 
+import DesignPatterns.command.CommandRegistry
+import DesignPatterns.command.create.{CreateKabrioletCommand, CreateKombiCommand, CreateMinivanCommand, CreateSedanCommand}
+import DesignPatterns.command.delete.DeleteCarCommand
 import DesignPatterns.facade.BasicOperationHandler
 import DesignPatterns.singleton.CarNotFoundException
 
@@ -13,6 +16,8 @@ object CarApplication {
     val PRINT = "print"
     val HELP = "help"
     val EXIT = "exit"
+    val UNDO = "undo"
+    val REDO = "redo"
   }
 
   private object Cars {
@@ -27,7 +32,7 @@ object CarApplication {
     val SUBCONTRACTORS = "subcontractors"
   }
 
-  private val operationHandler = new BasicOperationHandler
+  private implicit val operationHandler: BasicOperationHandler = new BasicOperationHandler
 
   private def handleCreate(args: Array[String]): Unit = {
     if (args.length != 1) {
@@ -35,10 +40,10 @@ object CarApplication {
     } else {
       var isUnknown = false
       args.head match {
-        case Cars.KABRIOLET => operationHandler.createKabriolet()
-        case Cars.KOMBI => operationHandler.createKombi()
-        case Cars.MINIVAN => operationHandler.createMinivan()
-        case Cars.SEDAN => operationHandler.createSedan()
+        case Cars.KABRIOLET => CommandRegistry.executeCommand(new CreateKabrioletCommand())
+        case Cars.KOMBI => CommandRegistry.executeCommand(new CreateKombiCommand())
+        case Cars.MINIVAN => CommandRegistry.executeCommand(new CreateMinivanCommand())
+        case Cars.SEDAN => CommandRegistry.executeCommand(new CreateSedanCommand())
         case other =>
           isUnknown = true
           println("UNKNOWN CAR TYPE " + other)
@@ -54,7 +59,7 @@ object CarApplication {
       println("COMMAND MUST HAVE 1 ARG")
     } else {
       try {
-        operationHandler.deleteCar(args.head.toInt)
+        CommandRegistry.executeCommand(new DeleteCarCommand(args.head.toInt))
         println("CAR " + args.head + " WAS SUCCESSFULLY DELETED")
       } catch {
         case e: CarNotFoundException => println("CAR WITH GIVEN SERIALNUMBER NOT FOUND")
@@ -83,20 +88,23 @@ object CarApplication {
     sys.exit(0)
   }
 
+  def handleUndo(): Unit = {
+    CommandRegistry.undo()
+  }
+
+  def handleRedo(): Unit = {
+    CommandRegistry.redo()
+  }
+
   def main(args: Array[String]): Unit = {
-
-    handleCreate(Array("kombi"))
-    handleCreate(Array("kombi"))
-    handleCreate(Array("kombi"))
-    handleCreate(Array("kombi"))
-    handlePrint(Array("subcontractors"))
-
     while (true) {
       val command = StdIn.readLine().split(" ")
       command.head match {
         case Commands.CREATE => handleCreate(command.tail)
         case Commands.DELETE => handleDelete(command.tail)
         case Commands.PRINT => handlePrint(command.tail)
+        case Commands.UNDO => handleUndo()
+        case Commands.REDO => handleRedo()
         case Commands.HELP => handleHelp()
         case Commands.EXIT => handleExit()
         case c => println("UNKNOWN COMMAND " + c)
