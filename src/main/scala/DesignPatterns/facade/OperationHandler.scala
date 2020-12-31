@@ -11,10 +11,11 @@ trait OperationHandler {
   def createMinivan(): Car
   def createSedan(): Car
   def createCar(car: Car): Unit
+  def improveFaultyCars(): Unit
+  def getCreatedCars: Seq[Car]
   def findCar(serialNumber: Int): Option[FinalProduct]
   def createCarWithSubContractor(subContractor: SubContractor, car: Car): Unit
   def deleteCar(serialNumber: Int): Unit
-  def printCreatedCars(): Unit
   def printSubContractorTree(): Unit
 }
 
@@ -50,8 +51,13 @@ class BasicOperationHandler extends OperationHandler {
     None
   }
 
-  override def printCreatedCars(): Unit = {
+  def printCreatedCars(): Unit = {
     CarProducer.getInstance().printCars()
+  }
+
+  def getCreatedCars: Seq[Car] = {
+    CarProducer.getInstance().refreshQualityImprover()
+    CarProducer.getInstance().getCars
   }
 
   override def printSubContractorTree(): Unit = {
@@ -73,6 +79,10 @@ class BasicOperationHandler extends OperationHandler {
       }
     }
     throw new SubContractorNotFound(subContractor)
+  }
+
+  override def improveFaultyCars(): Unit = {
+    CarProducer.getInstance().improveAllCarsQuality()
   }
 }
 

@@ -3,7 +3,9 @@ package DesignPatterns
 import DesignPatterns.command.CommandRegistry
 import DesignPatterns.command.create.{CreateKabrioletCommand, CreateKombiCommand, CreateMinivanCommand, CreateSedanCommand}
 import DesignPatterns.command.delete.DeleteCarCommand
+import DesignPatterns.command.improve.ImproveFaultyCarsCommand
 import DesignPatterns.facade.BasicOperationHandler
+import DesignPatterns.model.cars.{EngineType, Kombi, QualityType}
 import DesignPatterns.singleton.CarNotFoundException
 
 import scala.io.StdIn
@@ -18,6 +20,7 @@ object CarApplication {
     val EXIT = "exit"
     val UNDO = "undo"
     val REDO = "redo"
+    val IMPROVE = "improve"
   }
 
   private object Cars {
@@ -81,7 +84,7 @@ object CarApplication {
 
   def handleHelp(): Unit = {
     println("Usage: \n\tcreate\n\t\tkabriolet\n\t\tkombi\n\t\tminivan\n\t\tsedan\n\t" +
-      "delete <serial number>\n\tprint\n\t\tcars\n\t\tsubcontractors\n\thelp\n\texit")
+      "delete <serial number>\n\tprint\n\t\tcars\n\t\tsubcontractors\n\timprove\n\thelp\n\tundo\n\tredo\n\texit")
   }
 
   def handleExit(): Unit = {
@@ -96,6 +99,15 @@ object CarApplication {
     CommandRegistry.redo()
   }
 
+  def handleImprove(): Unit = {
+    CommandRegistry.executeCommand(new ImproveFaultyCarsCommand)
+    println("CARS QUALITY IMPROVED")
+  }
+
+
+  private val kombiLow = new Kombi(EngineType.LPG, QualityType.Low, 120, 60)
+  private val kombiMedium = new Kombi(EngineType.LPG, QualityType.Medium, 120, 60)
+
   def main(args: Array[String]): Unit = {
     while (true) {
       val command = StdIn.readLine().split(" ")
@@ -103,6 +115,7 @@ object CarApplication {
         case Commands.CREATE => handleCreate(command.tail)
         case Commands.DELETE => handleDelete(command.tail)
         case Commands.PRINT => handlePrint(command.tail)
+        case Commands.IMPROVE => handleImprove()
         case Commands.UNDO => handleUndo()
         case Commands.REDO => handleRedo()
         case Commands.HELP => handleHelp()

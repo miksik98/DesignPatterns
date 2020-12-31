@@ -5,17 +5,20 @@ import DesignPatterns.model.cars.EngineType.EngineType
 import DesignPatterns.model.cars.QualityType.QualityType
 import DesignPatterns.singleton.CarProducer
 
-class Kombi(engineType: EngineType, qualityType: QualityType, maxSpeed: Int, val trunkCapacity: Int)
+class Kombi(engineType: EngineType, qualityType: QualityType, maxSpeed: Int, val trunkCapacity: Int, skipAdding: Boolean = false)
   extends Car(engineType, qualityType, maxSpeed, 5) with TrunkCompatibility {
 
-  CarProducer.getInstance().addCar(this)
-
+  if (!skipAdding) {
+    CarProducer.getInstance().addCar(this)
+  }
   override def toString: String = {
     super.toString + ", " + trunkCapacity + "l boot capacity"
   }
 
   override def cloneCar(): Car = {
-    new Kombi(engineType, qualityType, maxSpeed, trunkCapacity)
+    val clone = new Kombi(engineType, qualityType, maxSpeed, trunkCapacity, skipAdding = true)
+    clone.setSerialNumber(serialNumber)
+    clone
   }
 
   override def equals(obj: Any): Boolean = {

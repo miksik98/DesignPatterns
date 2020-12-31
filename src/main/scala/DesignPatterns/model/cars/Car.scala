@@ -4,6 +4,7 @@ import DesignPatterns.decorator.Tuningable
 import DesignPatterns.factory.Generators.SerialNumberGenerator
 import DesignPatterns.model.cars.EngineType.EngineType
 import DesignPatterns.model.cars.QualityType.QualityType
+import DesignPatterns.observer.Subscriber
 import DesignPatterns.prototype.CarPrototype
 
 object CarType extends Enumeration {
@@ -21,9 +22,9 @@ object QualityType extends Enumeration {
   val Low, Medium, High = Value
 }
 
-abstract class Car(var engineType: EngineType, val qualityType: QualityType,
-                   var  maxSpeed: Int, val maxSeatsNumber: Int, var serialNumber: Int = SerialNumberGenerator.generate())
-  extends CarPrototype with Tuningable {
+abstract class Car(var engineType: EngineType, var qualityType: QualityType,
+                   var maxSpeed: Int, val maxSeatsNumber: Int, var serialNumber: Int = SerialNumberGenerator.generate())
+  extends CarPrototype with Tuningable with Subscriber {
 
   val carType: String = this.getClass.getSimpleName
   var actualSeatsNumber: Int = maxSeatsNumber
@@ -68,9 +69,26 @@ abstract class Car(var engineType: EngineType, val qualityType: QualityType,
     obj match {
       case other: Car =>
         this.engineType == other.engineType && this.qualityType == other.qualityType &&
-          this.maxSpeed == other.maxSpeed && this.maxSeatsNumber == other.maxSeatsNumber
+          this.maxSpeed == other.maxSpeed && this.maxSeatsNumber == other.maxSeatsNumber &&
+          this.carType == other.carType
       case _ =>
         false
+    }
+  }
+
+  def setQualityType(qualityType: QualityType): Unit = {
+    this.qualityType = qualityType
+  }
+
+  def getQualityType: QualityType = {
+    qualityType
+  }
+
+  override def update(): Unit = {
+    qualityType match {
+      case DesignPatterns.model.cars.QualityType.Low => setQualityType(QualityType.Medium)
+      case DesignPatterns.model.cars.QualityType.Medium => setQualityType(QualityType.High)
+      case DesignPatterns.model.cars.QualityType.High => sys.error("Car with high quality could not be updated")
     }
   }
 }

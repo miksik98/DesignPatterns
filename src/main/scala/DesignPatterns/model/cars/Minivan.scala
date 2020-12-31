@@ -4,17 +4,20 @@ import DesignPatterns.model.cars.EngineType.EngineType
 import DesignPatterns.model.cars.QualityType.QualityType
 import DesignPatterns.singleton.CarProducer
 
-class Minivan (engineType: EngineType, qualityType: QualityType, maxSpeed: Int, val weight: Int)
+class Minivan (engineType: EngineType, qualityType: QualityType, maxSpeed: Int, val weight: Int, skipAdding: Boolean = false)
   extends Car(engineType, qualityType, maxSpeed, 8) {
 
-  CarProducer.getInstance().addCar(this)
-
+  if (!skipAdding) {
+    CarProducer.getInstance().addCar(this)
+  }
   override def toString: String = {
     super.toString + ", " + weight + " weight"
   }
 
   override def cloneCar(): Car = {
-    new Minivan(engineType, qualityType, maxSpeed, weight)
+    val clone = new Minivan(engineType, qualityType, maxSpeed, weight, skipAdding = true)
+    clone.setSerialNumber(serialNumber)
+    clone
   }
 
   override def equals(obj: Any): Boolean = {
@@ -24,5 +27,9 @@ class Minivan (engineType: EngineType, qualityType: QualityType, maxSpeed: Int, 
       case _ =>
         false
     }
+  }
+
+  override def getQualityType: QualityType = {
+    qualityType
   }
 }

@@ -1,9 +1,38 @@
 package DesignPatterns.singleton
 
 import DesignPatterns.composite.{FinalProduct, SubContractor}
+import DesignPatterns.model.cars.{Car, QualityType}
+import DesignPatterns.observer.CarQualityImprover
 
 protected class CarProducer
   extends SubContractor(Seq.empty, isMainContractor = true) {
+
+  private val qualityImprover = new CarQualityImprover
+
+  override def addCar(car: Car): Unit = {
+    super.addCar(car)
+    if (car.qualityType != QualityType.High) {
+      qualityImprover.addSubscriber(car)
+    }
+  }
+
+  override def reset(): Unit = {
+    super.reset()
+    qualityImprover.subscribers = Seq.empty
+  }
+
+  def refreshQualityImprover(): Unit = {
+    getCars.foreach(
+      car =>
+        if (!qualityImprover.subscribers.contains(car) && car.qualityType != QualityType.High) {
+          qualityImprover.addSubscriber(car)
+        }
+    )
+  }
+
+  def improveAllCarsQuality(): Unit = {
+    qualityImprover.notifySubscribers()
+  }
 
   def deleteCar(serialNumber: Int): Unit = {
     val it = createIterator()
