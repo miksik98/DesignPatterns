@@ -84,6 +84,10 @@ class BasicOperationHandler extends OperationHandler {
   override def improveFaultyCars(): Unit = {
     CarProducer.getInstance().improveAllCarsQuality()
   }
+
+  def calculateCosts(): Int = {
+    CarProducer.getInstance().calculateCosts()
+  }
 }
 
 class SubContractorNotFound(subContractor: SubContractor) extends RuntimeException

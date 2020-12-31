@@ -21,6 +21,7 @@ object CarApplication {
     val UNDO = "undo"
     val REDO = "redo"
     val IMPROVE = "improve"
+    val COSTS = "costs"
   }
 
   private object Cars {
@@ -104,9 +105,9 @@ object CarApplication {
     println("CARS QUALITY IMPROVED")
   }
 
-
-  private val kombiLow = new Kombi(EngineType.LPG, QualityType.Low, 120, 60)
-  private val kombiMedium = new Kombi(EngineType.LPG, QualityType.Medium, 120, 60)
+  def handleCosts(): Unit = {
+    println(operationHandler.calculateCosts() + " PLN")
+  }
 
   def main(args: Array[String]): Unit = {
     while (true) {
@@ -116,6 +117,7 @@ object CarApplication {
         case Commands.DELETE => handleDelete(command.tail)
         case Commands.PRINT => handlePrint(command.tail)
         case Commands.IMPROVE => handleImprove()
+        case Commands.COSTS => handleCosts()
         case Commands.UNDO => handleUndo()
         case Commands.REDO => handleRedo()
         case Commands.HELP => handleHelp()

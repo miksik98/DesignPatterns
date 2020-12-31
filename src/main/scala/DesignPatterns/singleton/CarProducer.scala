@@ -3,6 +3,7 @@ package DesignPatterns.singleton
 import DesignPatterns.composite.{FinalProduct, SubContractor}
 import DesignPatterns.model.cars.{Car, QualityType}
 import DesignPatterns.observer.CarQualityImprover
+import DesignPatterns.visitor.CostProductionFlowVisitor
 
 protected class CarProducer
   extends SubContractor(Seq.empty, isMainContractor = true) {
@@ -28,6 +29,15 @@ protected class CarProducer
           qualityImprover.addSubscriber(car)
         }
     )
+  }
+
+  def calculateCosts(): Int = {
+    val it = createIterator()
+    var costsSum = 0
+    while (it.hasNext) {
+      costsSum += CostProductionFlowVisitor.visit(it.next)
+    }
+    costsSum
   }
 
   def improveAllCarsQuality(): Unit = {

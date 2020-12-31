@@ -2,17 +2,18 @@ package DesignPatterns.composite
 
 import DesignPatterns.iterator.{IterableCollection, Iterator, ProductionFlowComponentIterator}
 import DesignPatterns.model.cars.Car
+import DesignPatterns.visitor.{ProductionFlowVisitable, ProductionFlowVisitor}
 
 import scala.collection.mutable
 import scala.util.Random
 
-trait ProductionFlowComponent {
+trait ProductionFlowComponent extends ProductionFlowVisitable[Int] {
   def getCars: Seq[Car]
 }
 
 class SubContractor(var components: Seq[ProductionFlowComponent],
                     val name: String = new Random().nextString(5),
-                    isMainContractor: Boolean = false)
+                    val isMainContractor: Boolean = false)
   extends ProductionFlowComponent with IterableCollection[ProductionFlowComponent] {
 
   if (!isMainContractor && components.isEmpty) {
@@ -90,6 +91,10 @@ class SubContractor(var components: Seq[ProductionFlowComponent],
       case _ => false
     }
   }
+
+  override def accept(visitor: ProductionFlowVisitor[Int]): Int = {
+    visitor.visit(this)
+  }
 }
 
 class FinalProduct(val car: Car, var subContractor: Option[SubContractor]) extends ProductionFlowComponent {
@@ -118,6 +123,10 @@ class FinalProduct(val car: Car, var subContractor: Option[SubContractor]) exten
         this.car == other.car
       case _ => false
     }
+  }
+
+  override def accept(visitor: ProductionFlowVisitor[Int]): Int = {
+    visitor.visit(this)
   }
 }
 
