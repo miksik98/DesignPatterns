@@ -6,6 +6,7 @@ import DesignPatterns.command.delete.DeleteCarCommand
 import DesignPatterns.command.improve.ImproveFaultyCarsCommand
 import DesignPatterns.command.snapshot.{MakeSnapshotCommand, RestoreSnapshotCommand}
 import DesignPatterns.facade.BasicOperationHandler
+import DesignPatterns.memento.EmptyHistoryException
 import DesignPatterns.model.cars.{EngineType, Kombi, QualityType}
 import DesignPatterns.singleton.CarNotFoundException
 
@@ -119,8 +120,12 @@ object CarApplication {
   }
 
   def handleRestore(): Unit = {
-    CommandRegistry.executeCommand(new RestoreSnapshotCommand)
-    println("LAST SNAPSHOT RESTORED")
+    try {
+      CommandRegistry.executeCommand(new RestoreSnapshotCommand)
+      println("LAST SNAPSHOT RESTORED")
+    } catch {
+      case e: EmptyHistoryException => println(e.message)
+    }
   }
 
   def main(args: Array[String]): Unit = {

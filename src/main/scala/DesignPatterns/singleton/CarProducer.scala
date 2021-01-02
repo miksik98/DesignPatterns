@@ -1,7 +1,7 @@
 package DesignPatterns.singleton
 
 import DesignPatterns.composite.{FinalProduct, SubContractor}
-import DesignPatterns.memento.{CarProducerHistory, CarProducerSnapshot, Memento, Originator}
+import DesignPatterns.memento.{CarProducerSnapshot, Originator}
 import DesignPatterns.model.cars.{Car, QualityType}
 import DesignPatterns.observer.CarQualityImprover
 import DesignPatterns.visitor.CostProductionFlowVisitor
