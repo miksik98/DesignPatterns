@@ -2,12 +2,13 @@ package DesignPatterns.composite
 
 import DesignPatterns.iterator.{IterableCollection, Iterator, ProductionFlowComponentIterator}
 import DesignPatterns.model.cars.Car
+import DesignPatterns.prototype.ProductionFlowComponentPrototype
 import DesignPatterns.visitor.{ProductionFlowVisitable, ProductionFlowVisitor}
 
 import scala.collection.mutable
 import scala.util.Random
 
-trait ProductionFlowComponent extends ProductionFlowVisitable[Int] {
+trait ProductionFlowComponent extends ProductionFlowVisitable[Int] with ProductionFlowComponentPrototype {
   def getCars: Seq[Car]
 }
 
@@ -95,6 +96,10 @@ class SubContractor(var components: Seq[ProductionFlowComponent],
   override def accept(visitor: ProductionFlowVisitor[Int]): Int = {
     visitor.visit(this)
   }
+
+  override def cloneComponent: ProductionFlowComponent = {
+    new SubContractor(components, name, isMainContractor)
+  }
 }
 
 class FinalProduct(val car: Car, var subContractor: Option[SubContractor]) extends ProductionFlowComponent {
@@ -127,6 +132,13 @@ class FinalProduct(val car: Car, var subContractor: Option[SubContractor]) exten
 
   override def accept(visitor: ProductionFlowVisitor[Int]): Int = {
     visitor.visit(this)
+  }
+
+  override def cloneComponent: ProductionFlowComponent = {
+    subContractor match {
+      case Some(contractor) => FinalProduct(car.cloneCar(), contractor)
+      case None => FinalProduct(car.cloneCar())
+    }
   }
 }
 

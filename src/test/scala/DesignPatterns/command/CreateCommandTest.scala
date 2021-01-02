@@ -2,12 +2,12 @@ package DesignPatterns.command
 
 import DesignPatterns.BasicTest
 import DesignPatterns.command.create.{CreateKabrioletCommand, CreateKombiCommand, CreateMinivanCommand, CreateSedanCommand}
-import DesignPatterns.facade.{BasicOperationHandler, OperationHandler}
+import DesignPatterns.facade.{BasicOperationHandler, CreateOperationHandler}
 import DesignPatterns.model.cars.{Kabriolet, Kombi, Minivan, Sedan}
 import DesignPatterns.singleton.CarProducer
 
 class CreateCommandTest extends BasicTest {
-  private implicit val operationHandler: OperationHandler = new BasicOperationHandler
+  private implicit val operationHandler: CreateOperationHandler = new BasicOperationHandler
 
   test("sedan command test") {
     val command = new CreateSedanCommand

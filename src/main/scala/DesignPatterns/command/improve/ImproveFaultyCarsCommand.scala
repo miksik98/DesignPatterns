@@ -1,10 +1,10 @@
 package DesignPatterns.command.improve
 
 import DesignPatterns.command.Command
-import DesignPatterns.facade.OperationHandler
+import DesignPatterns.facade.ImproveOperationHandler
 import DesignPatterns.model.cars.QualityType.QualityType
 
-class ImproveFaultyCarsCommand(implicit operationHandler: OperationHandler) extends Command {
+class ImproveFaultyCarsCommand(implicit operationHandler: ImproveOperationHandler) extends Command {
   private var previousCars: Option[Seq[(Int, QualityType)]] = None
   private var currentCars: Option[Seq[(Int, QualityType)]] = None
 

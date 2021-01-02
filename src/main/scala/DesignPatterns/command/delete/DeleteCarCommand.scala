@@ -2,10 +2,10 @@ package DesignPatterns.command.delete
 
 import DesignPatterns.command.Command
 import DesignPatterns.composite.FinalProduct
-import DesignPatterns.facade.OperationHandler
+import DesignPatterns.facade.CreateOperationHandler
 import DesignPatterns.singleton.CarNotFoundException
 
-class DeleteCarCommand(serialNumber: Int)(implicit operationHandler: OperationHandler) extends Command {
+class DeleteCarCommand(serialNumber: Int)(implicit operationHandler: CreateOperationHandler) extends Command {
   private val finalProduct: FinalProduct = operationHandler.findCar(serialNumber).getOrElse(throw new CarNotFoundException(serialNumber))
 
   override def execute(): Unit = {

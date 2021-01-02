@@ -2,24 +2,39 @@ package DesignPatterns.facade
 
 import DesignPatterns.composite.{FinalProduct, SubContractor}
 import DesignPatterns.factory.{KabrioletFactory, KombiFactory, MinivanFactory, SedanFactory}
+import DesignPatterns.memento.{CarProducerHistory, CarProducerSnapshot}
 import DesignPatterns.model.cars.Car
 import DesignPatterns.singleton.CarProducer
 
-trait OperationHandler {
+trait TreeOperationHandler {
+  def printSubContractorTree(): Unit
+  def calculateCosts(): Int
+}
+
+trait StateOperationHandler {
+  def saveState(state: CarProducerSnapshot = CarProducer.getInstance().save()): Unit
+  def restoreState(): Unit
+  def removeLastState(): Unit
+}
+
+trait ImproveOperationHandler {
+  def improveFaultyCars(): Unit
+  def getCreatedCars: Seq[Car]
+}
+
+trait CreateOperationHandler {
   def createKabriolet(): Car
   def createKombi(): Car
   def createMinivan(): Car
   def createSedan(): Car
   def createCar(car: Car): Unit
-  def improveFaultyCars(): Unit
-  def getCreatedCars: Seq[Car]
+  def deleteCar(serialNumber: Int): Unit
   def findCar(serialNumber: Int): Option[FinalProduct]
   def createCarWithSubContractor(subContractor: SubContractor, car: Car): Unit
-  def deleteCar(serialNumber: Int): Unit
-  def printSubContractorTree(): Unit
 }
 
-class BasicOperationHandler extends OperationHandler {
+class BasicOperationHandler extends TreeOperationHandler with CreateOperationHandler with ImproveOperationHandler
+  with StateOperationHandler {
   override def createKabriolet(): Car = {
     KabrioletFactory.create()
   }
@@ -85,8 +100,20 @@ class BasicOperationHandler extends OperationHandler {
     CarProducer.getInstance().improveAllCarsQuality()
   }
 
-  def calculateCosts(): Int = {
+  override def calculateCosts(): Int = {
     CarProducer.getInstance().calculateCosts()
+  }
+
+  override def saveState(state: CarProducerSnapshot = CarProducer.getInstance().save()): Unit = {
+    CarProducerHistory.makeBackup(state)
+  }
+
+  override def restoreState(): Unit = {
+    CarProducerHistory.restore()
+  }
+
+  override def removeLastState(): Unit = {
+    CarProducerHistory.removeLastSaved()
   }
 }
 

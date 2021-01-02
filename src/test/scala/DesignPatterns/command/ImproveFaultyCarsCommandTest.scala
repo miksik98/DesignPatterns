@@ -2,13 +2,13 @@ package DesignPatterns.command
 
 import DesignPatterns.BasicTest
 import DesignPatterns.command.improve.ImproveFaultyCarsCommand
-import DesignPatterns.facade.BasicOperationHandler
+import DesignPatterns.facade.{BasicOperationHandler, ImproveOperationHandler}
 import DesignPatterns.model.cars.{Car, EngineType, Kombi, QualityType}
 import DesignPatterns.singleton.CarProducer
 import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers}
 
 class ImproveFaultyCarsCommandTest extends FunSuite with Matchers with BeforeAndAfterAll {
-  private implicit val operationHandler: BasicOperationHandler = new BasicOperationHandler
+  private implicit val operationHandler: ImproveOperationHandler = new BasicOperationHandler
   CarProducer.getInstance().reset()
   private val kombiLow = new Kombi(EngineType.LPG, QualityType.Low, 120, 60)
   private val kombiMedium = new Kombi(EngineType.LPG, QualityType.Medium, 120, 60)

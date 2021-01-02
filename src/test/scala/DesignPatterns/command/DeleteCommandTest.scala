@@ -3,13 +3,13 @@ package DesignPatterns.command
 import DesignPatterns.BasicTest
 import DesignPatterns.command.delete.DeleteCarCommand
 import DesignPatterns.composite.SubContractorGenerator
-import DesignPatterns.facade.BasicOperationHandler
+import DesignPatterns.facade.{BasicOperationHandler, CreateOperationHandler}
 import DesignPatterns.factory.Generators.CarGenerator
 import DesignPatterns.model.cars.Car
 import DesignPatterns.singleton.CarProducer
 
 class DeleteCommandTest extends BasicTest {
-  private implicit val operationHandler: BasicOperationHandler = new BasicOperationHandler
+  private implicit val operationHandler: CreateOperationHandler = new BasicOperationHandler
 
   test("delete command test") {
     Range(0,10).foreach(i => CarGenerator.generate())

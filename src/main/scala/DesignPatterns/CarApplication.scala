@@ -4,6 +4,7 @@ import DesignPatterns.command.CommandRegistry
 import DesignPatterns.command.create.{CreateKabrioletCommand, CreateKombiCommand, CreateMinivanCommand, CreateSedanCommand}
 import DesignPatterns.command.delete.DeleteCarCommand
 import DesignPatterns.command.improve.ImproveFaultyCarsCommand
+import DesignPatterns.command.snapshot.{MakeSnapshotCommand, RestoreSnapshotCommand}
 import DesignPatterns.facade.BasicOperationHandler
 import DesignPatterns.model.cars.{EngineType, Kombi, QualityType}
 import DesignPatterns.singleton.CarNotFoundException
@@ -22,6 +23,8 @@ object CarApplication {
     val REDO = "redo"
     val IMPROVE = "improve"
     val COSTS = "costs"
+    val SAVE = "save"
+    val RESTORE = "restore"
   }
 
   private object Cars {
@@ -85,7 +88,8 @@ object CarApplication {
 
   def handleHelp(): Unit = {
     println("Usage: \n\tcreate\n\t\tkabriolet\n\t\tkombi\n\t\tminivan\n\t\tsedan\n\t" +
-      "delete <serial number>\n\tprint\n\t\tcars\n\t\tsubcontractors\n\timprove\n\thelp\n\tundo\n\tredo\n\texit")
+      "delete <serial number>\n\tprint\n\t\tcars\n\t\tsubcontractors\n\timprove\n\tcosts\n\t" +
+      "save\n\trestore\n\thelp\n\tundo\n\tredo\n\texit")
   }
 
   def handleExit(): Unit = {
@@ -109,6 +113,16 @@ object CarApplication {
     println(operationHandler.calculateCosts() + " PLN")
   }
 
+  def handleSave(): Unit = {
+    CommandRegistry.executeCommand(new MakeSnapshotCommand)
+    println("SNAPSHOT SAVED")
+  }
+
+  def handleRestore(): Unit = {
+    CommandRegistry.executeCommand(new RestoreSnapshotCommand)
+    println("LAST SNAPSHOT RESTORED")
+  }
+
   def main(args: Array[String]): Unit = {
     while (true) {
       val command = StdIn.readLine().split(" ")
@@ -118,6 +132,8 @@ object CarApplication {
         case Commands.PRINT => handlePrint(command.tail)
         case Commands.IMPROVE => handleImprove()
         case Commands.COSTS => handleCosts()
+        case Commands.SAVE => handleSave()
+        case Commands.RESTORE => handleRestore()
         case Commands.UNDO => handleUndo()
         case Commands.REDO => handleRedo()
         case Commands.HELP => handleHelp()

@@ -1,8 +1,8 @@
 package DesignPatterns.command.create
 
-import DesignPatterns.facade.OperationHandler
+import DesignPatterns.facade.CreateOperationHandler
 
-class CreateMinivanCommand(implicit operationHandler: OperationHandler) extends CreateCarCommand(operationHandler)  {
+class CreateMinivanCommand(implicit operationHandler: CreateOperationHandler) extends CreateCarCommand(operationHandler)  {
   override def execute(): Unit = {
     car = Some(operationHandler.createMinivan())
   }

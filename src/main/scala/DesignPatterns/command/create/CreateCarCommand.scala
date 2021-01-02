@@ -1,10 +1,10 @@
 package DesignPatterns.command.create
 
 import DesignPatterns.command.Command
-import DesignPatterns.facade.OperationHandler
+import DesignPatterns.facade.CreateOperationHandler
 import DesignPatterns.model.cars.Car
 
-abstract class CreateCarCommand(operationHandler: OperationHandler) extends Command {
+abstract class CreateCarCommand(operationHandler: CreateOperationHandler) extends Command {
   protected var car: Option[Car] = None
 
   override def undo(): Unit = {

@@ -1,8 +1,8 @@
 package DesignPatterns.command.create
 
-import DesignPatterns.facade.OperationHandler
+import DesignPatterns.facade.CreateOperationHandler
 
-class CreateKombiCommand(implicit operationHandler: OperationHandler) extends CreateCarCommand(operationHandler)  {
+class CreateKombiCommand(implicit operationHandler: CreateOperationHandler) extends CreateCarCommand(operationHandler)  {
   override def execute(): Unit = {
     car = Some(operationHandler.createKombi())
   }

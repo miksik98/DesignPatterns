@@ -1,12 +1,13 @@
 package DesignPatterns.singleton
 
 import DesignPatterns.composite.{FinalProduct, SubContractor}
+import DesignPatterns.memento.{CarProducerHistory, CarProducerSnapshot, Memento, Originator}
 import DesignPatterns.model.cars.{Car, QualityType}
 import DesignPatterns.observer.CarQualityImprover
 import DesignPatterns.visitor.CostProductionFlowVisitor
 
 protected class CarProducer
-  extends SubContractor(Seq.empty, isMainContractor = true) {
+  extends SubContractor(Seq.empty, isMainContractor = true) with Originator {
 
   private val qualityImprover = new CarQualityImprover
 
@@ -62,6 +63,10 @@ protected class CarProducer
   }
 
   def carsNumber: Int = getCars.length
+
+  override def save(): CarProducerSnapshot = {
+    new CarProducerSnapshot(components)
+  }
 }
 
 class CarNotFoundException(serialNumber: Int) extends RuntimeException
