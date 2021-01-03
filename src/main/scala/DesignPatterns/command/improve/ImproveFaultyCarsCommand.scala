@@ -3,8 +3,9 @@ package DesignPatterns.command.improve
 import DesignPatterns.command.Command
 import DesignPatterns.facade.ImproveOperationHandler
 import DesignPatterns.model.cars.QualityType.QualityType
+import DesignPatterns.strategy.{ImprovingStrategy, SimpleImproveStrategy}
 
-class ImproveFaultyCarsCommand(implicit operationHandler: ImproveOperationHandler) extends Command {
+class ImproveFaultyCarsCommand(improvingStrategy: ImprovingStrategy = SimpleImproveStrategy)(implicit operationHandler: ImproveOperationHandler) extends Command {
   private var previousCars: Option[Seq[(Int, QualityType)]] = None
   private var currentCars: Option[Seq[(Int, QualityType)]] = None
 
@@ -23,7 +24,7 @@ class ImproveFaultyCarsCommand(implicit operationHandler: ImproveOperationHandle
 
   override def execute(): Unit = {
     val prevCars = operationHandler.getCreatedCars.map(c => Tuple2(c.serialNumber, c.qualityType))
-    operationHandler.improveFaultyCars()
+    operationHandler.improveFaultyCars(improvingStrategy)
     val curCars = operationHandler.getCreatedCars.map(c => Tuple2(c.serialNumber, c.qualityType))
     val notChanged = getCommonSerialNumbers(prevCars, curCars)
     previousCars = Some(prevCars.filterNot(x => notChanged.contains(x._1)))

@@ -5,6 +5,7 @@ import DesignPatterns.factory.{KabrioletFactory, KombiFactory, MinivanFactory, S
 import DesignPatterns.memento.{CarProducerHistory, CarProducerSnapshot}
 import DesignPatterns.model.cars.Car
 import DesignPatterns.singleton.CarProducer
+import DesignPatterns.strategy.ImprovingStrategy
 
 trait TreeOperationHandler {
   def printSubContractorTree(): Unit
@@ -18,7 +19,7 @@ trait StateOperationHandler {
 }
 
 trait ImproveOperationHandler {
-  def improveFaultyCars(): Unit
+  def improveFaultyCars(improvingStrategy: ImprovingStrategy): Unit
   def getCreatedCars: Seq[Car]
 }
 
@@ -96,8 +97,8 @@ class BasicOperationHandler extends TreeOperationHandler with CreateOperationHan
     throw new SubContractorNotFound(subContractor)
   }
 
-  override def improveFaultyCars(): Unit = {
-    CarProducer.getInstance().improveAllCarsQuality()
+  override def improveFaultyCars(improvingStrategy: ImprovingStrategy): Unit = {
+    CarProducer.getInstance().improveAllCarsQuality(improvingStrategy)
   }
 
   override def calculateCosts(): Int = {

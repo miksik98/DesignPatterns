@@ -1,6 +1,7 @@
 package DesignPatterns.observer
 
 import DesignPatterns.model.cars.{Car, QualityType}
+import DesignPatterns.strategy.{ImprovingStrategy, SimpleImproveStrategy}
 
 class CarQualityImprover extends Publisher[Car] {
   var subscribers: Seq[Car] = Seq.empty
@@ -13,8 +14,8 @@ class CarQualityImprover extends Publisher[Car] {
     subscribers = subscribers.filterNot(c => c == car)
   }
 
-  def notifySubscribers(): Unit = {
-    subscribers.foreach(_.update())
+  def notifySubscribers(improvingStrategy: ImprovingStrategy = SimpleImproveStrategy): Unit = {
+    subscribers.foreach(_.update(improvingStrategy))
     subscribers = subscribers.filterNot(_.getQualityType == QualityType.High)
   }
 }

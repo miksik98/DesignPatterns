@@ -6,6 +6,7 @@ import DesignPatterns.model.cars.EngineType.EngineType
 import DesignPatterns.model.cars.QualityType.QualityType
 import DesignPatterns.observer.Subscriber
 import DesignPatterns.prototype.CarPrototype
+import DesignPatterns.strategy.ImprovingStrategy
 
 object CarType extends Enumeration {
   type CarType = Value
@@ -84,11 +85,7 @@ abstract class Car(var engineType: EngineType, var qualityType: QualityType,
     qualityType
   }
 
-  override def update(): Unit = {
-    qualityType match {
-      case DesignPatterns.model.cars.QualityType.Low => setQualityType(QualityType.Medium)
-      case DesignPatterns.model.cars.QualityType.Medium => setQualityType(QualityType.High)
-      case DesignPatterns.model.cars.QualityType.High => sys.error("Car with high quality could not be updated")
-    }
+  override def update(improvingStrategy: ImprovingStrategy): Unit = {
+    improvingStrategy.execute(this)
   }
 }

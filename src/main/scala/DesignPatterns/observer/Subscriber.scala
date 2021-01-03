@@ -1,5 +1,7 @@
 package DesignPatterns.observer
 
+import DesignPatterns.strategy.ImprovingStrategy
+
 trait Subscriber {
-  def update(): Unit
+  def update(improvingStrategy: ImprovingStrategy): Unit
 }

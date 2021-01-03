@@ -9,6 +9,7 @@ import DesignPatterns.facade.BasicOperationHandler
 import DesignPatterns.memento.EmptyHistoryException
 import DesignPatterns.model.cars.{EngineType, Kombi, QualityType}
 import DesignPatterns.singleton.CarNotFoundException
+import DesignPatterns.strategy.{SimpleImproveStrategy, SuperImproveStrategy}
 
 import scala.io.StdIn
 
@@ -105,8 +106,15 @@ object CarApplication {
     CommandRegistry.redo()
   }
 
-  def handleImprove(): Unit = {
-    CommandRegistry.executeCommand(new ImproveFaultyCarsCommand)
+  def handleImprove(args: Array[String]): Unit = {
+    val strategy = {
+      if (args.nonEmpty && args.head == "super") {
+        SuperImproveStrategy
+      } else {
+        SimpleImproveStrategy
+      }
+    }
+    CommandRegistry.executeCommand(new ImproveFaultyCarsCommand(strategy))
     println("CARS QUALITY IMPROVED")
   }
 
@@ -135,7 +143,7 @@ object CarApplication {
         case Commands.CREATE => handleCreate(command.tail)
         case Commands.DELETE => handleDelete(command.tail)
         case Commands.PRINT => handlePrint(command.tail)
-        case Commands.IMPROVE => handleImprove()
+        case Commands.IMPROVE => handleImprove(command.tail)
         case Commands.COSTS => handleCosts()
         case Commands.SAVE => handleSave()
         case Commands.RESTORE => handleRestore()

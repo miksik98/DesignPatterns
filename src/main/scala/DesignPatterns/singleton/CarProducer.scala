@@ -4,6 +4,7 @@ import DesignPatterns.composite.{FinalProduct, SubContractor}
 import DesignPatterns.memento.{CarProducerSnapshot, Originator}
 import DesignPatterns.model.cars.{Car, QualityType}
 import DesignPatterns.observer.CarQualityImprover
+import DesignPatterns.strategy.{ImprovingStrategy, SimpleImproveStrategy}
 import DesignPatterns.visitor.CostProductionFlowVisitor
 
 protected class CarProducer
@@ -41,8 +42,8 @@ protected class CarProducer
     costsSum
   }
 
-  def improveAllCarsQuality(): Unit = {
-    qualityImprover.notifySubscribers()
+  def improveAllCarsQuality(improvingStrategy: ImprovingStrategy = SimpleImproveStrategy): Unit = {
+    qualityImprover.notifySubscribers(improvingStrategy)
   }
 
   def deleteCar(serialNumber: Int): Unit = {
