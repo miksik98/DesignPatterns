@@ -8,7 +8,8 @@ import DesignPatterns.command.snapshot.{MakeSnapshotCommand, RestoreSnapshotComm
 import DesignPatterns.facade.BasicOperationHandler
 import DesignPatterns.memento.EmptyHistoryException
 import DesignPatterns.model.cars.{EngineType, Kombi, QualityType}
-import DesignPatterns.singleton.CarNotFoundException
+import DesignPatterns.singleton.{CarNotFoundException, InsufficientPrivileges}
+import DesignPatterns.state.{Admin, Moderator}
 import DesignPatterns.strategy.{SimpleImproveStrategy, SuperImproveStrategy}
 
 import scala.io.StdIn
@@ -27,6 +28,8 @@ object CarApplication {
     val COSTS = "costs"
     val SAVE = "save"
     val RESTORE = "restore"
+    val SUDO = "sudo"
+    val LOGOUT = "logout"
   }
 
   private object Cars {
@@ -72,6 +75,7 @@ object CarApplication {
         println("CAR " + args.head + " WAS SUCCESSFULLY DELETED")
       } catch {
         case e: CarNotFoundException => println("CAR WITH GIVEN SERIALNUMBER NOT FOUND")
+        case e: InsufficientPrivileges => println("INSUFFICIENT PRIVILEGES. LOG IN AS ADMIN TO DELETE CAR.")
       }
     }
   }
@@ -103,7 +107,11 @@ object CarApplication {
   }
 
   def handleRedo(): Unit = {
-    CommandRegistry.redo()
+    try {
+      CommandRegistry.redo()
+    } catch {
+      case e: InsufficientPrivileges => println("INSUFFICIENT PRIVILEGES. LOG IN AS ADMIN TO DELETE CAR.")
+    }
   }
 
   def handleImprove(args: Array[String]): Unit = {
@@ -136,23 +144,46 @@ object CarApplication {
     }
   }
 
+  def handleSudo(args: Array[String]): Unit = {
+    print("login: ")
+    val login = StdIn.readLine()
+    print("password: ")
+    val password = StdIn.readLine()
+    if (login != "admin" && password != "admin") {
+      println("WRONG LOGIN OR PASSWORD")
+    } else {
+      operationHandler.setState(Admin)
+      handleCommand(args)
+    }
+  }
+
+  def handleLogout(): Unit = {
+    operationHandler.setState(Moderator)
+  }
+
   def main(args: Array[String]): Unit = {
     while (true) {
       val command = StdIn.readLine().split(" ")
-      command.head match {
-        case Commands.CREATE => handleCreate(command.tail)
-        case Commands.DELETE => handleDelete(command.tail)
-        case Commands.PRINT => handlePrint(command.tail)
-        case Commands.IMPROVE => handleImprove(command.tail)
-        case Commands.COSTS => handleCosts()
-        case Commands.SAVE => handleSave()
-        case Commands.RESTORE => handleRestore()
-        case Commands.UNDO => handleUndo()
-        case Commands.REDO => handleRedo()
-        case Commands.HELP => handleHelp()
-        case Commands.EXIT => handleExit()
-        case c => println("UNKNOWN COMMAND " + c)
-      }
+      handleCommand(command)
+    }
+  }
+
+  private def handleCommand(command: Array[String]): Unit = {
+    command.head match {
+      case Commands.CREATE => handleCreate(command.tail)
+      case Commands.DELETE => handleDelete(command.tail)
+      case Commands.PRINT => handlePrint(command.tail)
+      case Commands.IMPROVE => handleImprove(command.tail)
+      case Commands.COSTS => handleCosts()
+      case Commands.SAVE => handleSave()
+      case Commands.RESTORE => handleRestore()
+      case Commands.SUDO => handleSudo(command.tail)
+      case Commands.LOGOUT => handleLogout()
+      case Commands.UNDO => handleUndo()
+      case Commands.REDO => handleRedo()
+      case Commands.HELP => handleHelp()
+      case Commands.EXIT => handleExit()
+      case c => println("UNKNOWN COMMAND " + c)
     }
   }
 }

@@ -4,6 +4,7 @@ import DesignPatterns.composite.{FinalProduct, SubContractor}
 import DesignPatterns.memento.{CarProducerSnapshot, Originator}
 import DesignPatterns.model.cars.{Car, QualityType}
 import DesignPatterns.observer.CarQualityImprover
+import DesignPatterns.state.{CarProducerState, Moderator}
 import DesignPatterns.strategy.{ImprovingStrategy, SimpleImproveStrategy}
 import DesignPatterns.visitor.CostProductionFlowVisitor
 
@@ -11,12 +12,17 @@ protected class CarProducer
   extends SubContractor(Seq.empty, isMainContractor = true) with Originator {
 
   private val qualityImprover = new CarQualityImprover
+  private var state: CarProducerState = Moderator
 
   override def addCar(car: Car): Unit = {
     super.addCar(car)
     if (car.qualityType != QualityType.High) {
       qualityImprover.addSubscriber(car)
     }
+  }
+
+  def setState(state: CarProducerState): Unit = {
+    this.state = state
   }
 
   override def reset(): Unit = {
@@ -47,16 +53,7 @@ protected class CarProducer
   }
 
   def deleteCar(serialNumber: Int): Unit = {
-    val it = createIterator()
-    while (it.hasNext) {
-      it.next match {
-        case fp: FinalProduct if fp.hasSerialNumber(serialNumber) =>
-          fp.removeFromSubContractor()
-          return
-        case _ =>
-      }
-    }
-    throw new CarNotFoundException(serialNumber)
+    state.deleteCar(serialNumber)
   }
 
   def printCars(): Unit = {
@@ -71,6 +68,7 @@ protected class CarProducer
 }
 
 class CarNotFoundException(serialNumber: Int) extends RuntimeException
+class InsufficientPrivileges extends RuntimeException
 
 object CarProducer {
   private var instance: Option[CarProducer] = None

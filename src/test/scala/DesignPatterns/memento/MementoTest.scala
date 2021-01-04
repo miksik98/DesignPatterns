@@ -1,13 +1,14 @@
 package DesignPatterns.memento
 
-import DesignPatterns.BasicTest
 import DesignPatterns.composite.FinalProduct
 import DesignPatterns.factory.SedanFactory
 import DesignPatterns.singleton.CarProducer
+import DesignPatterns.state.Admin
 import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers}
 
 class MementoTest extends FunSuite with Matchers with BeforeAndAfterAll {
   CarProducer.getInstance().reset()
+  CarProducer.getInstance().setState(Admin)
   private val sedan = SedanFactory.create()
   private val component = FinalProduct(sedan, CarProducer.getInstance())
   private val snapshot = new CarProducerSnapshot(Seq(component))

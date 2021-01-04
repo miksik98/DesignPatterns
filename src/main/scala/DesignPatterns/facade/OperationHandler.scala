@@ -5,11 +5,16 @@ import DesignPatterns.factory.{KabrioletFactory, KombiFactory, MinivanFactory, S
 import DesignPatterns.memento.{CarProducerHistory, CarProducerSnapshot}
 import DesignPatterns.model.cars.Car
 import DesignPatterns.singleton.CarProducer
+import DesignPatterns.state.CarProducerState
 import DesignPatterns.strategy.ImprovingStrategy
 
 trait TreeOperationHandler {
   def printSubContractorTree(): Unit
   def calculateCosts(): Int
+}
+
+trait PrivilegeOperationHandler {
+  def setState(state: CarProducerState): Unit
 }
 
 trait StateOperationHandler {
@@ -34,7 +39,8 @@ trait CreateOperationHandler {
   def createCarWithSubContractor(subContractor: SubContractor, car: Car): Unit
 }
 
-class BasicOperationHandler extends TreeOperationHandler with CreateOperationHandler with ImproveOperationHandler
+class BasicOperationHandler extends TreeOperationHandler with CreateOperationHandler
+  with ImproveOperationHandler with PrivilegeOperationHandler
   with StateOperationHandler {
   override def createKabriolet(): Car = {
     KabrioletFactory.create()
@@ -115,6 +121,10 @@ class BasicOperationHandler extends TreeOperationHandler with CreateOperationHan
 
   override def removeLastState(): Unit = {
     CarProducerHistory.removeLastSaved()
+  }
+
+  override def setState(state: CarProducerState): Unit = {
+    CarProducer.getInstance().setState(state)
   }
 }
 
