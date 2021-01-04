@@ -5,8 +5,6 @@ import DesignPatterns.factory.{KombiFactory, SedanFactory}
 
 class MediatorTest extends BasicTest {
   private val msg0 = "HELLO"
-  private val msg1 = "hello"
-  private val msg2 = "Hello"
 
   test("communication test") {
     val kombi = KombiFactory.create()
