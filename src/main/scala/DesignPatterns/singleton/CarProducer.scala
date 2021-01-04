@@ -1,6 +1,7 @@
 package DesignPatterns.singleton
 
 import DesignPatterns.composite.{FinalProduct, SubContractor}
+import DesignPatterns.mediator.CommunicationMediator
 import DesignPatterns.memento.{CarProducerSnapshot, Originator}
 import DesignPatterns.model.cars.{Car, QualityType}
 import DesignPatterns.observer.CarQualityImprover
@@ -9,7 +10,7 @@ import DesignPatterns.strategy.{ImprovingStrategy, SimpleImproveStrategy}
 import DesignPatterns.visitor.CostProductionFlowVisitor
 
 protected class CarProducer
-  extends SubContractor(Seq.empty, isMainContractor = true) with Originator {
+  extends SubContractor(Seq.empty, isMainContractor = true) with Originator with CommunicationMediator {
 
   private val qualityImprover = new CarQualityImprover
   private var state: CarProducerState = Moderator
@@ -64,6 +65,13 @@ protected class CarProducer
 
   override def save(): CarProducerSnapshot = {
     new CarProducerSnapshot(components)
+  }
+
+  override def forwardMessage(serialNumber: Int, message: String): Unit = {
+    getCars
+      .find(_.serialNumber == serialNumber)
+      .getOrElse(throw new CarNotFoundException(serialNumber))
+      .addMessage(message)
   }
 }
 

@@ -2,10 +2,12 @@ package DesignPatterns.model.cars
 
 import DesignPatterns.decorator.Tuningable
 import DesignPatterns.factory.Generators.SerialNumberGenerator
+import DesignPatterns.mediator.{CommunicationMediator, RadioMessage}
 import DesignPatterns.model.cars.EngineType.EngineType
 import DesignPatterns.model.cars.QualityType.QualityType
 import DesignPatterns.observer.Subscriber
 import DesignPatterns.prototype.CarPrototype
+import DesignPatterns.singleton.CarProducer
 import DesignPatterns.strategy.ImprovingStrategy
 
 object CarType extends Enumeration {
@@ -25,10 +27,11 @@ object QualityType extends Enumeration {
 
 abstract class Car(var engineType: EngineType, var qualityType: QualityType,
                    var maxSpeed: Int, val maxSeatsNumber: Int, var serialNumber: Int = SerialNumberGenerator.generate())
-  extends CarPrototype with Tuningable with Subscriber {
+  extends CarPrototype with Tuningable with Subscriber with RadioMessage {
 
   val carType: String = this.getClass.getSimpleName
   var actualSeatsNumber: Int = maxSeatsNumber
+  override val mediator: CommunicationMediator = CarProducer.getInstance()
 
   def setSerialNumber(serialNumber: Int): Unit = this.serialNumber = serialNumber
 
@@ -87,5 +90,9 @@ abstract class Car(var engineType: EngineType, var qualityType: QualityType,
 
   override def update(improvingStrategy: ImprovingStrategy): Unit = {
     improvingStrategy.execute(this)
+  }
+
+  override def prepareMessage(message: String): String = {
+    "[from "+this.serialNumber+"] "+message
   }
 }

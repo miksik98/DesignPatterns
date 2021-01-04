@@ -7,7 +7,7 @@ import DesignPatterns.command.improve.ImproveFaultyCarsCommand
 import DesignPatterns.command.snapshot.{MakeSnapshotCommand, RestoreSnapshotCommand}
 import DesignPatterns.facade.BasicOperationHandler
 import DesignPatterns.memento.EmptyHistoryException
-import DesignPatterns.model.cars.{EngineType, Kombi, QualityType}
+import DesignPatterns.model.cars.{Car, EngineType, Kombi, QualityType}
 import DesignPatterns.singleton.{CarNotFoundException, InsufficientPrivileges}
 import DesignPatterns.state.{Admin, Moderator}
 import DesignPatterns.strategy.{SimpleImproveStrategy, SuperImproveStrategy}
@@ -30,6 +30,9 @@ object CarApplication {
     val RESTORE = "restore"
     val SUDO = "sudo"
     val LOGOUT = "logout"
+    val ACTIVATE = "activate"
+    val SEND_MESSAGE = "SendMessage"
+    val READ_MESSAGE = "ReadMessage"
   }
 
   private object Cars {
@@ -110,6 +113,7 @@ object CarApplication {
     try {
       CommandRegistry.redo()
     } catch {
+      case e: CarNotFoundException => println("CAR WITH GIVEN SERIALNUMBER NOT FOUND")
       case e: InsufficientPrivileges => println("INSUFFICIENT PRIVILEGES. LOG IN AS ADMIN TO DELETE CAR.")
     }
   }
@@ -144,6 +148,20 @@ object CarApplication {
     }
   }
 
+  def handleActivate(tail: Array[String]): Unit = {
+    if (tail.length != 1) {
+      println("INCORRECT NUMBER OF ARGS")
+    } else {
+      try {
+        currentCar = Some(operationHandler.findCar(tail.head.toInt).getOrElse(throw new CarNotFoundException(tail.head.toInt)).car)
+        println("CAR ACTIVATED")
+      } catch {
+        case e: CarNotFoundException => println("CAR DOES NOT EXIST")
+      }
+    }
+  }
+
+
   def handleSudo(args: Array[String]): Unit = {
     print("login: ")
     val login = StdIn.readLine()
@@ -161,10 +179,32 @@ object CarApplication {
     operationHandler.setState(Moderator)
   }
 
+  var currentCar: Option[Car] = None
+
   def main(args: Array[String]): Unit = {
     while (true) {
       val command = StdIn.readLine().split(" ")
       handleCommand(command)
+    }
+  }
+
+  def handleSendMessage(tail: Array[String]): Unit = {
+    currentCar match {
+      case Some(car) =>
+        if (tail.length != 2) {
+          println("INCORRECT NUMBER OF ARGS")
+        } else {
+          car.sendMessage(tail(0).toInt, tail.tail.mkString(" "))
+          println("MESSAGE SENT")
+        }
+      case None => println("YOU HAVE TO ACTIVATE CAR FIRST")
+    }
+  }
+
+  def handleReadMessage(): Unit = {
+    currentCar match {
+      case Some(car) => car.readMessages()
+      case None => println("YOU HAVE TO ACTIVATE CAR FIRST")
     }
   }
 
@@ -177,6 +217,9 @@ object CarApplication {
       case Commands.COSTS => handleCosts()
       case Commands.SAVE => handleSave()
       case Commands.RESTORE => handleRestore()
+      case Commands.ACTIVATE => handleActivate(command.tail)
+      case Commands.SEND_MESSAGE => handleSendMessage(command.tail)
+      case Commands.READ_MESSAGE => handleReadMessage()
       case Commands.SUDO => handleSudo(command.tail)
       case Commands.LOGOUT => handleLogout()
       case Commands.UNDO => handleUndo()
