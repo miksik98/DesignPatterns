@@ -1,10 +1,11 @@
 package DesignPatterns.mediator
 
+import DesignPatterns.proxy.MediatorProxy
 import DesignPatterns.singleton.CarNotFoundException
 
 trait RadioMessage {
   private var messages: Seq[String] = Seq.empty
-  protected val mediator: CommunicationMediator
+  protected val mediator: CommunicationMediator = MediatorProxy
 
   def prepareMessage(message: String): String
 

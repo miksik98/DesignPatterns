@@ -15,11 +15,11 @@ object CarProducerHistory {
 
   def restore(): Unit = {
     if (savedSnapshots.isEmpty) {
-      throw new EmptyHistoryException("NO SAVED STATES!")
+      throw new EmptyHistoryException
     } else {
       savedSnapshots.pop().restore()
     }
   }
 }
 
-class EmptyHistoryException(val message: String) extends RuntimeException
+class EmptyHistoryException extends RuntimeException

@@ -31,7 +31,6 @@ abstract class Car(var engineType: EngineType, var qualityType: QualityType,
 
   val carType: String = this.getClass.getSimpleName
   var actualSeatsNumber: Int = maxSeatsNumber
-  override val mediator: CommunicationMediator = CarProducer.getInstance()
 
   def setSerialNumber(serialNumber: Int): Unit = this.serialNumber = serialNumber
 

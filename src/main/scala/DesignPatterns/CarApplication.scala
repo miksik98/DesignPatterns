@@ -8,6 +8,7 @@ import DesignPatterns.command.snapshot.{MakeSnapshotCommand, RestoreSnapshotComm
 import DesignPatterns.facade.BasicOperationHandler
 import DesignPatterns.memento.EmptyHistoryException
 import DesignPatterns.model.cars.{Car, EngineType, Kombi, QualityType}
+import DesignPatterns.proxy.ForbiddenMessage
 import DesignPatterns.singleton.{CarNotFoundException, InsufficientPrivileges}
 import DesignPatterns.state.{Admin, Moderator}
 import DesignPatterns.strategy.{SimpleImproveStrategy, SuperImproveStrategy}
@@ -144,7 +145,7 @@ object CarApplication {
       CommandRegistry.executeCommand(new RestoreSnapshotCommand)
       println("LAST SNAPSHOT RESTORED")
     } catch {
-      case e: EmptyHistoryException => println(e.message)
+      case e: EmptyHistoryException => println("HISTORY IS EMPTY")
     }
   }
 
@@ -194,8 +195,12 @@ object CarApplication {
         if (tail.length != 2) {
           println("INCORRECT NUMBER OF ARGS")
         } else {
-          car.sendMessage(tail(0).toInt, tail.tail.mkString(" "))
-          println("MESSAGE SENT")
+          try {
+            car.sendMessage(tail(0).toInt, tail.tail.mkString(" "))
+            println("MESSAGE SENT")
+          } catch {
+            case e: ForbiddenMessage => println("FORBIDDEN MESSAGE")
+          }
         }
       case None => println("YOU HAVE TO ACTIVATE CAR FIRST")
     }
