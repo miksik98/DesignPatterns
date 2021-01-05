@@ -1,10 +1,10 @@
 package DesignPatterns.bridge.services
 
-import DesignPatterns.bridge.finders.CarFinder
 import DesignPatterns.model.cars.Car
+import DesignPatterns.template_method.CarProducerFinder
 
-class CarSearchService(finder: CarFinder) extends SearchService {
-  override protected val carFinder: CarFinder = finder
+class CarSearchService(finder: CarProducerFinder) extends SearchService {
+  override protected val carFinder: CarProducerFinder = finder
 
   override def getAll: Seq[Car] = finder.getCars
 

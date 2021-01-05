@@ -9,9 +9,7 @@ class SpeedCarsFinder(lowerBound: Int, higherBound: Int) extends ChainCarFinder 
     sys.error("lowerBound is higher than higherBound")
   }
 
-  override def getCars: Seq[Car] = {
-    getAllCarsFromProducer.filter(car => car.getMaxSpeed >= lowerBound && car.getMaxSpeed <= higherBound)
-  }
-
   override protected val name: FilterName = FilterName.Speed
+
+  override def filterStrategy(car: Car): Boolean = car.getMaxSpeed >= lowerBound && car.getMaxSpeed <= higherBound
 }

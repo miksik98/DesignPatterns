@@ -3,8 +3,9 @@ package DesignPatterns.chain
 import DesignPatterns.bridge.finders.CarFinder
 import DesignPatterns.chain.FilterName.FilterName
 import DesignPatterns.model.cars.Car
+import DesignPatterns.template_method.CarProducerFinder
 
-trait ChainCarFinder extends CarFinder {
+trait ChainCarFinder extends CarProducerFinder {
   var next: Option[ChainCarFinder] = None
   protected val name: FilterName
 

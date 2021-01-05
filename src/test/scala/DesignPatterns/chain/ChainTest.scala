@@ -2,9 +2,11 @@ package DesignPatterns.chain
 
 import DesignPatterns.bridge.finders.{FaultyCarsFinder, KombiFinder, SpeedCarsFinder}
 import DesignPatterns.model.cars.{EngineType, Kombi, QualityType, Sedan}
+import DesignPatterns.singleton.CarProducer
 import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers}
 
-class ChainTest extends FunSuite with Matchers with BeforeAndAfterAll {
+class ChainTest extends FunSuite with Matchers {
+  CarProducer.getInstance().reset()
   private val chainSearchService = new ChainSearchService(new FaultyCarsFinder)
   chainSearchService.appendFinder(new KombiFinder)
   chainSearchService.appendFinder(new SpeedCarsFinder(190, 200))

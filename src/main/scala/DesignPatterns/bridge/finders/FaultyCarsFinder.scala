@@ -5,9 +5,7 @@ import DesignPatterns.chain.FilterName.FilterName
 import DesignPatterns.model.cars.{Car, QualityType}
 
 class FaultyCarsFinder extends ChainCarFinder {
-  override def getCars: Seq[Car] = {
-    getAllCarsFromProducer.filter(_.getQualityType == QualityType.Low)
-  }
-
   override protected val name: FilterName = FilterName.Faulty
+
+  override def filterStrategy(car: Car): Boolean = car.getQualityType == QualityType.Low
 }
